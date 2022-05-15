@@ -114,7 +114,7 @@ public class StegoCalculator implements Runnable {
     private String padBitString(String bitString, int targetLength)
     {
         while (bitString.length() < targetLength) {
-            bitString = "0" + bitString; // Pad 0s until target length of 8 bits is reached
+            bitString = "0" + bitString;
         }
         return bitString;
     }

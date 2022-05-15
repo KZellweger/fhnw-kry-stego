@@ -18,8 +18,9 @@ public class HeaderPane extends AnchorPane implements View {
     private final Button importContainmentImage = new Button("Import Containment");
     private final Button importImage = new Button("Import Image");
     private final Button hideImage = new Button("Hide Image");
+    private final Button revealImage = new Button("Reveal Image");
     private final Button saveResult = new Button("Save Result");
-    private final HBox hBox = new HBox(importImage, importContainmentImage, hideImage);
+    private final HBox hBox = new HBox(importImage, importContainmentImage, hideImage, saveResult, revealImage);
     private final Stage stage = new Stage();
     private final FileChooser fc = new FileChooser();
     private final RootPanel rootPanel;
@@ -32,6 +33,7 @@ public class HeaderPane extends AnchorPane implements View {
     public void initializeControls() {
         importImage.setId("IMAGE");
         importContainmentImage.setId("CONTAINMENT");
+        revealImage.setId("UNVEIL");
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setSpacing(5);
         getChildren().add(hBox);
@@ -43,7 +45,23 @@ public class HeaderPane extends AnchorPane implements View {
     {
         importContainmentImage.setOnAction(this::loadImageAction);
         importImage.setOnAction(this::loadImageAction);
+        revealImage.setOnAction( e -> {
+            File f = fc.showOpenDialog(stage);
+            if(f != null){
+                try {
+                    rootPanel.revealImage(ImageIO.read(f));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         hideImage.setOnAction(e -> rootPanel.hideImage());
+        saveResult.setOnAction(e -> {
+            File f = fc.showSaveDialog(stage);
+            if(f != null){
+                rootPanel.saveResult(f);
+            }
+        });
     }
 
     private void loadImageAction(ActionEvent event){

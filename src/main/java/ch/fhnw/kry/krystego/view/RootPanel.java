@@ -1,6 +1,7 @@
 package ch.fhnw.kry.krystego.view;
 
 import ch.fhnw.kry.krystego.controller.StegoCalculator;
+import ch.fhnw.kry.krystego.controller.StegoRevealer;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -8,7 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class RootPanel extends BorderPane {
 
@@ -51,8 +55,28 @@ public class RootPanel extends BorderPane {
         th.start();
     }
 
+    public void revealImage(BufferedImage hidden){
+        StegoRevealer reveal = new StegoRevealer(hidden, this::updateResultImage);
+        Thread th = new Thread(reveal);
+        th.start();
+    }
+
     public void updateResultImage(BufferedImage bufferedImage){
         addImage(bufferedImage, "RESULT");
     }
 
+    public void saveResult(File f) {
+        flowPane.getChildren().stream()
+                .filter(n -> n.getId().equals("RESULT"))
+                .findFirst()
+                .ifPresent(n -> {
+                    ImagePane pane = (ImagePane) n;
+                    BufferedImage raw = pane.getRawImage();
+                    try {
+                        ImageIO.write(raw, "jpg", f);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
 }
