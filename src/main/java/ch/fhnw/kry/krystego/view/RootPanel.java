@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
@@ -17,13 +18,15 @@ import java.io.IOException;
 public class RootPanel extends BorderPane {
 
     private final FlowPane flowPane = new FlowPane();
+    private final ScrollPane scrollPane = new ScrollPane();
 
     public RootPanel() {
         super();
         HeaderPane headerPane = new HeaderPane(this);
         flowPane.setOrientation(Orientation.HORIZONTAL);
+        scrollPane.setContent(flowPane);
         setTop(headerPane);
-        setCenter(flowPane);
+        setCenter(scrollPane);
         setMargin(headerPane, new Insets(10));
         this.setPrefSize(1000, 800);
     }
